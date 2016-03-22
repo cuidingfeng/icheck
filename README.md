@@ -1,83 +1,68 @@
+<<<<<<< HEAD
 # [iCheck plugin](http://fronteed.com/iCheck/) <sup>[1.0.2](#march-03-2014)</sup>
 #### Highly customizable checkboxes and radio buttons for jQuery and Zepto.
+=======
+# iCheck plugin v2.0 rc1
+>>>>>>> origin/2.x
 
-Refer to the [iCheck website](http://fronteed.com/iCheck/) for examples.
+#### This is a release candidate version, you may try to use it.
 
+<<<<<<< HEAD
 **Note: [iCheck v2.0](https://github.com/fronteed/icheck/tree/2.x) is on the way**, it got a huge performance boost, many new options and methods. It's in a release candidate state, so you may try to use it. Feel free to submit an issue if you find something not working.
 
 ![Skins](http://fronteed.com/iCheck/examples.png)
+=======
+Docs will be updated later, here's a short intro:
+>>>>>>> origin/2.x
 
+## Default options
 
-Features
---------
+**Notes:**
 
-* **Identical inputs across different browsers and devices** — both [desktop and mobile](#browser-support)
-* **Touch devices support** — iOS, Android, BlackBerry, Windows Phone, Amazon Kindle
-* **Keyboard accessible inputs** — `Tab`, `Spacebar`, `Arrow up/down` and other shortcuts
-* **Customization freedom** — use any HTML and CSS to style inputs (try [6 Retina-ready skins](http://fronteed.com/iCheck/))
-* **jQuery and Zepto** JavaScript libraries support from single file
-* **Screenreader accessible inputs** &mdash; [ARIA](https://developer.mozilla.org/en-US/docs/Accessibility/ARIA) attributes for VoiceOver and others
-* **Lightweight size** — 1 kb gzipped
+**global object**: `window.icheck = { options }`
 
------
+**data attributes**: `<input data-checkedClass="mycheckedclass" type="checkbox" class="icheck">`
 
-* [32 options](#options) to customize checkboxes and radio buttons
-* [11 callbacks](#callbacks) to handle changes
-* [9 methods](#methods) to make changes programmatically
-* Saves changes to original inputs, [works carefully](#initialize) with any selectors
+**init object**: `$('input').icheck({ options });`
 
+#### These are global object options:
 
-How it works
-------------
-
-iCheck works with checkboxes and radio buttons like a constructor. **It wraps each input with a div**, which may be customized by you or using one of the [available skins](http://fronteed.com/iCheck/). You may also place inside that div some HTML code or text using `insert` option.
-
-For this HTML:
-
-```html
-<label>
-  <input type="checkbox" name="quux[1]" disabled>
-  Foo
-</label>
-
-<label for="baz[1]">Bar</label>
-<input type="radio" name="quux[2]" id="baz[1]" checked>
-
-<label for="baz[2]">Bar</label>
-<input type="radio" name="quux[2]" id="baz[2]">
 ```
-
-With default options you'll get nearly this:
-
-```html
-<label>
-  <div class="icheckbox disabled">
-    <input type="checkbox" name="quux[1]" disabled>
-  </div>
-  Foo
-</label>
-
-<label for="baz[1]">Bar</label>
-<div class="iradio checked">
-  <input type="radio" name="quux[2]" id="baz[1]" checked>
-</div>
-
-<label for="baz[2]">Bar</label>
-<div class="iradio">
-  <input type="radio" name="quux[2]" id="baz[2]">
-</div>
-```
-
-**By default, iCheck doesn't provide any CSS styles for wrapper divs** (if you don't use [skins](http://fronteed.com/iCheck/)).
-
-
-Options
--------
-
-These options are default:
-
-```js
 {
+  // auto init on domready
+  autoInit: true,
+
+  // auto handle ajax loaded inputs (any inputs inside the HTML ajax-requests will be customized automatically)
+  autoAjax: false,
+
+  // fastclick plugin replacement, works without dependencies (removes a 300ms delay between a physical tap and the firing the changes on mobile browsers). Compatible with but doesn't require http://github.com/ftlabs/fastclick
+  tap: true,
+
+  // these are a default classnames used by icheck (# are replaced with classes.base)
+  classes: {
+    base: 'icheck', // classname to search for and customize
+    div: '#-item', // classname to add for a styler div
+    area: '#-area-', // classname to add to styler, when "area" option is used
+    input: '#-input', // classname to add to original input
+    label: '#-label' // classname to add to assigned labels
+  },
+
+  // global callbacks (if set to false, callback will never be fired)
+  callbacks: {
+    ifCreated: function() {
+      // this is just an example
+    }
+  },
+}
+```
+
+#### These options can be stored in data attributes and init object:
+
+```
+{
+  // fastclick (http://github.com/ftlabs/fastclick) replacement, works without dependencies (removes a 300ms delay between a physical tap and the firing of a click event on mobile browsers)
+  tap: true,
+
   // 'checkbox' or 'radio' to style only checkboxes or radio buttons, both by default
   handle: '',
 
@@ -135,206 +120,172 @@ These options are default:
   // class added on focus state (input has gained focus)
   focusClass: 'focus',
 
-  // class added on active state (mouse button is pressed on input)
-  activeClass: 'active',
+  // class added on active state (pointer is pressed on input)
+  activeClass: '',
 
-  // adds hoverClass to customized input on label hover and labelHoverClass to label on input hover
-  labelHover: true,
+  // if true, a mirror classes will be toggled between label and input tags (i.e. input is checked => checkedClass is added to input, checkedLabelClass is added to label)
+  mirror: false,
 
-    // class added to label if labelHover set to true
-    labelHoverClass: 'hover',
+  // classes to append to labels if "mirror" option is true
+  checkedLabelClass: '',
+  disabledLabelClass: '',
+  indeterminateLabelClass: '',
 
-  // increase clickable area by given % (negative number to decrease)
-  increaseArea: '',
+  // same here
+  hoverLabelClass: '',
+  focusLabelClass: '',
+  activeLabelClass: '',
 
   // true to set 'pointer' CSS cursor over enabled inputs and 'default' over disabled
   cursor: false,
 
-  // set true to inherit original input's class name
-  inheritClass: false,
+  // callbacks (can't be stored in data attributes)
+  callbacks: {
+    ifCreated: function(node, settings) {
+      // your code
+    }
+  },
 
-  // if set to true, input's id is prefixed with 'iCheck-' and attached
-  inheritID: false,
+  // comma separated attributes to inherit from the input to the wrapper div (note: input's id is prefixed with 'icheck-' (or a window.classes.base))
+  inherit: '',
 
-  // set true to activate ARIA support
-  aria: false,
+  // increase clickable area by given %
+  area: 0,
 
   // add HTML code or text inside customized input
   insert: ''
 }
 ```
 
-There's no need to copy and paste all of them, you can just mention the ones you need:
 
-```js
-$('input').iCheck({
-  labelHover: false,
-  cursor: true
-});
+## Methods
+
 ```
-
-You can choose any class names and style them as you want.
-
-
-Initialize
-----------
-
-Just include `icheck.js` after [jQuery v1.7+](http://jquery.com) (or [Zepto](http://github.com/madrobby/zepto#zepto-modules) [polyfill, event, data]).
-
-iCheck supports any selectors, but handles only checkboxes and radio buttons:
-
-```js
-// customize all inputs (will search for checkboxes and radio buttons)
-$('input').iCheck();
-
-// handle inputs only inside $('.block')
-$('.block input').iCheck();
-
-// handle only checkboxes inside $('.test')
-$('.test input').iCheck({
-  handle: 'checkbox'
+// checked = change input's state to 'checked'
+$('input').icheck('checked', function(node) {
+  // callback function will be fired for each input
+  // node is the HTML node of the current input (can be used as $(node))
 });
 
-// handle .vote class elements (will search inside the element, if it's not an input)
-$('.vote').iCheck();
+// unchecked = remove 'checked' state
+$('input').icheck('unchecked', function(node) {
+  // callbackfunction will be fired for each input
+  // node is the HTML node of the current input (can be used as $(node))
+});
 
-// you can also change options after inputs are customized
-$('input.some').iCheck({
-  // different options
+// disabled = change input's state to 'disabled'
+$('input').icheck('disabled', function(node) {
+  // callbackfunction will be fired for each input
+  // node is the HTML node of the current input (can be used as $(node))
+});
+
+// enabled = remove 'disabled' state
+$('input').icheck('enabled', function(node) {
+  // callbackfunction will be fired for each input
+  // node is the HTML node of the current input (can be used as $(node))
+});
+
+// indeterminate = change input's state to 'indeterminate'
+$('input').icheck('indeterminate', function(node) {
+  // callbackfunction will be fired for each input
+  // node is the HTML node of the current input (can be used as $(node))
+});
+
+// determinate = remove 'indeterminate' state
+$('input').icheck('determinate', function(node) {
+  // callbackfunction will be fired for each input
+  // node is the HTML node of the current input (can be used as $(node))
+});
+
+// update = apply input changes, which were made outside the iCheck plugin
+$('input').icheck('updated', function(node) {
+  // callbackfunction will be fired for each input
+  // node is the HTML node of the current input (can be used as $(node))
+});
+
+// toggle = toggle 'checked' state
+$('input').icheck('toggle', function(node) {
+  // callbackfunction will be fired for each input
+  // node is the HTML node of the current input (can be used as $(node))
+});
+
+// destroy = remove all traces of iCheck
+$('input').icheck('destroy', function(node) {
+  // callbackfunction will be fired for each input
+  // node is the HTML node of the current input (can be used as $(node))
+});
+
+// data = returns an object with the init settings and current states of the input
+var data = $('input').icheck('data');
+// data.checked, data.disabled, data.indeterminat are a cached states valuese
+
+// styler = returns a wrapper div of the current input
+var parent = $('input').icheck('styler');
+// see http://git.io/cdYpdA for more info
+```
+
+## Callbacks
+
+Note: callbacks are fired for each input. Unchecked radio buttons also receive a callbacks.
+
+```
+ifChecked = input's state is changed to "checked"
+$('input').on('ifChecked', function(event) {
+  // your code
+});
+
+ifUnchecked = "checked" state is removed
+$('input').on('ifUnchecked', function(event) {
+  // your code
+});
+
+ifDisabled = input's state is changed to "disabled"
+$('input').on('ifDisabled', function(event) {
+  // your code
+});
+
+ifEnabled = "disabled" state is removed
+$('input').on('ifEnabled', function(event) {
+  // your code
+});
+
+ifIndeterminate = input's state is changed to "indeterminate"
+$('input').on('ifIndeterminate', function(event) {
+  // your code
+});
+
+ifDeterminate = "indeterminate" state is removed
+$('input').on('ifDeterminate', function(event) {
+  // your code
+});
+
+ifChanged = input's "checked", "disabled" or "indeterminate" state is changed
+$('input').on('ifChanged', function(event) {
+  // your code
+});
+
+ifToggled = input's "checked" state is changed
+$('input').on('ifToggled', function(event) {
+  // your code
+});
+
+ifCreated = input is just customized
+$('input').on('ifCreated', function(event) {
+  // your code
+});
+Note: this callback is switched off by default, use the options like these to switch it on:
+{
+ callbacks: {
+   ifCreated: true
+ }
+}
+
+ifDestroyed = customization is just removed
+$('input').on('ifDestroyed', function(event) {
+  // your code
 });
 ```
-
-Indeterminate
----------
-
-HTML5 allows specifying [indeterminate](http://css-tricks.com/indeterminate-checkboxes/) ("partially" checked) state for checkboxes. iCheck supports this for both checkboxes and radio buttons.
-
-You can make an input indeterminate through HTML using additional attributes (supported by iCheck). Both do the same job, but `indeterminate="true"` may not work in some browsers (like IE7):
-
-```html
-indeterminate="true"
-<input type="checkbox" indeterminate="true">
-<input type="radio" indeterminate="true">
-
-determinate="false"
-<input type="checkbox" determinate="false">
-<input type="radio" determinate="false">
-```
-
-`indeterminate` and `determinate` [methods](#methods) can be used to toggle indeterminate state.
-
-Callbacks
----------
-
-iCheck provides plenty callbacks, which may be used to handle changes.
-
-<table>
-  <thead>
-    <tr>
-      <th>Callback name</th>
-      <th>When used</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>ifClicked</td>
-      <td>user clicked on a customized input or an assigned label</td>
-    </tr>
-    <tr>
-      <td>ifChanged</td>
-      <td>input's "checked", "disabled" or "indeterminate" state is changed</td>
-    </tr>
-    <tr>
-      <td>ifChecked</td>
-      <td>input's state is changed to "checked"</td>
-    </tr>
-    <tr>
-      <td>ifUnchecked</td>
-      <td>"checked" state is removed</td>
-    </tr>
-    <tr>
-      <td>ifToggled</td>
-      <td>input's "checked" state is changed</td>
-    </tr>
-    <tr>
-      <td>ifDisabled</td>
-      <td>input's state is changed to "disabled"</td>
-    </tr>
-    <tr>
-      <td>ifEnabled</td>
-      <td>"disabled" state is removed</td>
-    </tr>
-    <tr>
-      <td>ifIndeterminate</td>
-      <td>input's state is changed to "indeterminate"</td>
-    </tr>
-    <tr>
-      <td>ifDeterminate</td>
-      <td>"indeterminate" state is removed</td>
-    </tr>
-    <tr>
-      <td>ifCreated</td>
-      <td>input is just customized</td>
-    </tr>
-    <tr>
-      <td>ifDestroyed</td>
-      <td>customization is just removed</td>
-    </tr>
-  </tbody>
-</table>
-
-Use `on()` method to bind them to inputs:
-
-```js
-$('input').on('ifChecked', function(event){
-  alert(event.type + ' callback');
-});
-```
-
-`ifCreated` callback should be binded before plugin init.
-
-
-Methods
--------
-
-These methods can be used to make changes programmatically (any selectors can be used):
-
-```js
-// change input's state to 'checked'
-$('input').iCheck('check');
-
-// remove 'checked' state
-$('input').iCheck('uncheck');
-
-// toggle 'checked' state
-$('input').iCheck('toggle');
-
-// change input's state to 'disabled'
-$('input').iCheck('disable');
-
-// remove 'disabled' state
-$('input').iCheck('enable');
-
-// change input's state to 'indeterminate'
-$('input').iCheck('indeterminate');
-
-// remove 'indeterminate' state
-$('input').iCheck('determinate');
-
-// apply input changes, which were done outside the plugin
-$('input').iCheck('update');
-
-// remove all traces of iCheck
-$('input').iCheck('destroy');
-```
-
-You may also specify some function, that will be executed on each method call:
-
-```js
-$('input').iCheck('check', function(){
-  alert('Well done, Sir');
-});
-```
+<<<<<<< HEAD
 
 Feel free to fork and submit pull-request or submit an issue if you find something not working.
 
@@ -422,3 +373,5 @@ Note: extended docs and usage examples will be available later.
 License
 -------
 iCheck plugin is released under the [MIT License](http://en.wikipedia.org/wiki/MIT_License). Feel free to use it in personal and commercial projects.
+=======
+>>>>>>> origin/2.x
